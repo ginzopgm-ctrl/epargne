@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finances du Foyer</title>
+<style>
+/* ══════════════════════════════════════════
+   CSS VARIABLES — LIGHT / DARK
+══════════════════════════════════════════ */
+:root {
+  --bg:        #f0f2f7;
+  --bg2:       #e4e8f0;
+  --surface:   #ffffff;
+  --surface2:  #f7f9fc;
+  --border:    #e2e8f0;
+  --border2:   #cbd5e0;
+  --text:      #1a202c;
+  --text2:     #4a5568;
+  --text3:     #718096;
+  --shadow:    0 4px 24px rgba(0,0,0,.08);
+  --shadow-sm: 0 2px 10px rgba(0,0,0,.05);
+  --radius:    16px;
+  --radius-sm: 10px;
+  --radius-xs: 7px;
+  --accent:    #6366f1;
+  --accent2:   #8b5cf6;
+  --p1:        #7c3aed;
+  --p1-light:  #ede9fe;
+  --p1-text:   #5b21b6;
+  --p2:        #dc2626;
+  --p2-light:  #fee2e2;
+  --p2-text:   #991b1b;
+  --foyer:     #059669;
+  --foyer-light:#d1fae5;
+  --foyer-text:#065f46;
+  --inp-bg:    #f7f9fc;
+  --inp-border:#dde3ed;
+  --inp-focus: #6366f1;
+  --badge-bg:  #f0f4ff;
+  --badge-text:#4338ca;
+}
+[data-theme="dark"] {
+  --bg:        #0f1117;
+  --bg2:       #161b27;
+  --surface:   #1e2330;
+  --surface2:  #252c3d;
+  --border:    #2d3650;
+  --border2:   #3d4a68;
+  --text:      #e8eaf2;
+  --text2:     #a8b4cc;
+  --text3:     #6b7a9a;
+  --shadow:    0 4px 24px rgba(0,0,0,.4);
+  --shadow-sm: 0 2px 10px rgba(0,0,0,.3);
+  --p1-light:  #2e1d5e;
+  --p1-text:   #c4b5fd;
+  --p2-light:  #450a0a;
+  --p2-text:   #fca5a5;
+  --foyer-light:#022c22;
+  --foyer-text:#6ee7b7;
+  --inp-bg:    #252c3d;
+  --inp-border:#3d4a68;
+  --inp-focus: #818cf8;
+  --badge-bg:  #1e2a4a;
+  --badge-text:#93c5fd;
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter','Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  padding:24px 16px 48px;
+  transition:background .3s,color .3s;
+  line-height:1.5;
+}
+
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
+.app-header{
+  max-width:1160px;margin:0 auto 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.app-title{
+  display:flex;flex-direction:column;
+}
+.app-title h1{
+  font-size:1.7rem;font-weight:800;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1.2;
+}
+.app-title .sub{font-size:.82rem;color:var(--text3);margin-top:3px}
+
+/* Dark mode toggle */
+.dm-toggle{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:50px;
+  padding:6px 14px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:all .2s;
+  user-select:none;
+  font-size:.82rem;color:var(--text2);font-weight:500;
+}
+.dm-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.toggle-pill{
+  width:36px;height:20px;border-radius:10px;
+  background:var(--border2);position:relative;
+  transition:background .3s;
+}
+.toggle-pill::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;transition:transform .3s;
+  box-shadow:0 1px 4px rgba(0,0,0,.25);
+}
+[data-theme="dark"] .toggle-pill{background:var(--accent)}
+[data-theme="dark"] .toggle-pill::after{transform:translateX(16px)}
+
+/* ══════════════════════════════════════════
+   MAIN TABS
+══════════════════════════════════════════ */
+.tabs{
+  max-width:1160px;margin:0 auto 24px;
+  display:flex;gap:4px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;padding:5px;
+  box-shadow:var(--shadow-sm);
+}
+.tab-btn{
+  flex:1;padding:10px 12px;border:none;border-radius:10px;
+  cursor:pointer;font-size:.84rem;font-weight:600;
+  transition:all .22s;background:transparent;
+  color:var(--text3);letter-spacing:.01em;
+}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;box-shadow:0 2px 12px rgba(99,102,241,.35);
+}
+.tab-btn:not(.active):hover{background:var(--surface2);color:var(--text)}
+.panel{display:none}.panel.active{display:block}
+
+/* ══════════════════════════════════════════
+   PERSON SUB-TABS
+══════════════════════════════════════════ */
+.person-tabs{
+  display:flex;gap:4px;margin-bottom:22px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;padding:4px;
+  max-width:400px;
+}
+.p-btn{
+  flex:1;padding:8px 12px;border:none;border-radius:9px;
+  cursor:pointer;font-size:.82rem;font-weight:600;
+  transition:all .2s;background:transparent;color:var(--text3);
+}
+.p-btn.p1.active{background:var(--p1-light);color:var(--p1-text)}
+.p-btn.p2.active{background:var(--p2-light);color:var(--p2-text)}
+.p-btn.foyer.active{background:var(--foyer-light);color:var(--foyer-text)}
+.p-btn:not(.active):hover{background:var(--border);color:var(--text)}
+.sub-panel{display:none}.sub-panel.active{display:block}
+
+/* ══════════════════════════════════════════
+   WRAP & GRIDS
+══════════════════════════════════════════ */
+.wrap{max-width:1160px;margin:0 auto}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+@media(max-width:780px){.g2{grid-template-columns:1fr}.g3,.g4,.g5{grid-template-columns:1fr 1fr}}
+@media(max-width:440px){.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* ══════════════════════════════════════════
+   CARDS
+══════════════════════════════════════════ */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px;
+  box-shadow:var(--shadow);
+  margin-bottom:18px;
+  transition:background .3s,border-color .3s;
+}
+.card h2{
+  font-size:.95rem;color:var(--text);
+  margin-bottom:18px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+  letter-spacing:.01em;
+}
+.card h2 .tag{
+  font-size:.7rem;font-weight:700;
+  padding:2px 8px;border-radius:20px;
+  background:var(--badge-bg);color:var(--badge-text);
+  letter-spacing:.04em;text-transform:uppercase;
+}
+
+/* ══════════════════════════════════════════
+   STAT CARDS
+══════════════════════════════════════════ */
+.sc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:16px 18px;
+  box-shadow:var(--shadow-sm);text-align:center;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.sc::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  opacity:0;transition:opacity .2s;
+}
+.sc:hover::before{opacity:1}
+.sc .lbl{font-size:.68rem;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.sc .val{font-size:1.35rem;font-weight:800;color:var(--text)}
+.sc.blue .val{color:#3b82f6}.sc.green .val{color:#10b981}
+.sc.purple .val{color:#8b5cf6}.sc.orange .val{color:#f59e0b}
+.sc.red .val{color:#ef4444}.sc.teal .val{color:#14b8a6}
+.sc.p1c .val{color:var(--p1)}.sc.p2c .val{color:var(--p2)}
+
+/* ══════════════════════════════════════════
+   BANNERS
+══════════════════════════════════════════ */
+.banner{
+  border-radius:var(--radius);padding:20px 24px;
+  color:#fff;display:flex;align-items:center;
+  gap:18px;flex-wrap:wrap;margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.banner::after{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+.banner h3{font-size:1.1rem;font-weight:800;margin-bottom:3px;position:relative}
+.banner p{font-size:.8rem;opacity:.72;position:relative}
+.banner-right{margin-left:auto;display:flex;gap:16px;flex-wrap:wrap;position:relative}
+.inp-group{display:flex;flex-direction:column}
+.inp-group label{font-size:.75rem;opacity:.8;margin-bottom:5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.inp-group .row{display:flex;align-items:center;gap:8px}
+.sal-inp{
+  width:130px;padding:9px 12px;border-radius:9px;
+  border:2px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.15);
+  color:#fff;font-size:1rem;font-weight:700;
+  text-align:right;outline:none;
+  transition:border-color .2s;
+  font-family:inherit;
+}
+.sal-inp::placeholder{color:rgba(255,255,255,.4)}
+.sal-inp:focus{border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.22)}
+.sal-unit{font-size:1rem;opacity:.6;font-weight:600}
+.name-inp-banner{
+  background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.28);
+  border-radius:8px;color:#fff;font-size:.92rem;font-weight:700;
+  padding:7px 10px;outline:none;width:120px;font-family:inherit;
+}
+.name-inp-banner::placeholder{color:rgba(255,255,255,.38)}
+.name-inp-banner:focus{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.24)}
+
+/* Gradient themes */
+.bg-p1{background:linear-gradient(135deg,#5b21b6,#7c3aed,#a78bfa)}
+.bg-p2{background:linear-gradient(135deg,#991b1b,#dc2626,#f87171)}
+.bg-dca{background:linear-gradient(135deg,#1d4ed8,#4f46e5,#818cf8)}
+.bg-foyer{background:linear-gradient(135deg,#065f46,#059669,#34d399)}
+.bg-pat{background:linear-gradient(135deg,#1e3a8a,#1d4ed8,#60a5fa)}
+
+/* ══════════════════════════════════════════
+   TABLE
+══════════════════════════════════════════ */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{
+  text-align:left;padding:8px 10px;
+  font-size:.69rem;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text3);border-bottom:2px solid var(--border);
+  font-weight:700;
+}
+.tbl td{
+  padding:9px 10px;border-bottom:1px solid var(--border);
+  font-size:.88rem;vertical-align:middle;color:var(--text);
+}
+.tbl tbody tr:hover td{background:var(--surface2)}
+.tbl tbody tr:last-child td{border-bottom:none}
+.tfoot-row td{
+  font-weight:700;font-size:.9rem;
+  background:var(--surface2);
+  border-top:2px solid var(--border);
+  color:var(--text);
+}
+
+/* ══════════════════════════════════════════
+   INPUTS — text type, no spinners
+══════════════════════════════════════════ */
+input[type=text],input[type=number]{-moz-appearance:textfield}
+input[type=text]::-webkit-outer-spin-button,
+input[type=text]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+.inp-name{
+  border:none;background:transparent;
+  font-size:.88rem;color:var(--text);
+  width:130px;outline:none;
+  border-bottom:1.5px solid var(--border2);
+  padding:2px 4px;
+  transition:border-color .2s;font-family:inherit;
+}
+.inp-name:focus{border-bottom-color:var(--inp-focus)}
+.inp-name::placeholder{color:var(--text3)}
+
+.inp-num{
+  width:86px;
+  background:var(--inp-bg);
+  border:1.5px solid var(--inp-border);
+  border-radius:8px;
+  padding:5px 8px;
+  font-size:.86rem;
+  text-align:right;
+  outline:none;
+  color:var(--text);
+  transition:border-color .2s,background .2s;
+  font-family:inherit;
+}
+.inp-num:focus{border-color:var(--inp-focus);background:var(--surface)}
+
+/* Colour dot */
+.dot{
+  width:10px;height:10px;border-radius:50%;
+  display:inline-block;margin-right:7px;
+  vertical-align:middle;flex-shrink:0;
+}
+
+/* ══════════════════════════════════════════
+   BADGES
+══════════════════════════════════════════ */
+.badge{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:.78rem;font-weight:700;min-width:52px;text-align:center;
+}
+.badge.blue{background:#dbeafe;color:#1d4ed8}
+.badge.green{background:#d1fae5;color:#065f46}
+.badge.gray{background:var(--surface2);color:var(--text2)}
+.badge.purple{background:#ede9fe;color:#5b21b6}
+[data-theme="dark"] .badge.blue{background:#1e3a5f;color:#93c5fd}
+[data-theme="dark"] .badge.green{background:#022c22;color:#6ee7b7}
+[data-theme="dark"] .badge.gray{background:var(--surface2);color:var(--text2)}
+[data-theme="dark"] .badge.purple{background:#2e1d5e;color:#c4b5fd}
+
+/* ══════════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════════ */
+.pw{
+  background:var(--border);border-radius:4px;
+  height:6px;width:58px;overflow:hidden;
+  display:inline-block;vertical-align:middle;margin-right:6px;
+}
+.pf{height:100%;border-radius:4px;transition:width .35s ease}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn-add{
+  margin-top:12px;border:1.5px dashed;border-radius:10px;
+  padding:8px 14px;cursor:pointer;font-size:.83rem;
+  width:100%;transition:all .2s;font-weight:600;
+  font-family:inherit;
+}
+.ba-blue{background:var(--badge-bg);color:var(--badge-text);border-color:var(--inp-focus)}
+.ba-blue:hover{background:#dbeafe;color:#1d4ed8}
+.ba-green{background:#d1fae5;color:#065f46;border-color:#059669}
+.ba-green:hover{background:#a7f3d0;color:#064e3b}
+.ba-red{background:#fee2e2;color:#991b1b;border-color:#dc2626}
+.ba-red:hover{background:#fecaca;color:#7f1d1d}
+.ba-orange{background:#fef3c7;color:#92400e;border-color:#d97706}
+.ba-orange:hover{background:#fde68a;color:#78350f}
+.ba-purple{background:#ede9fe;color:#5b21b6;border-color:#7c3aed}
+.ba-purple:hover{background:#ddd6fe;color:#4c1d95}
+[data-theme="dark"] .ba-blue{background:#1e2a4a;color:#93c5fd;border-color:#6366f1}
+[data-theme="dark"] .ba-green{background:#022c22;color:#6ee7b7;border-color:#059669}
+[data-theme="dark"] .ba-red{background:#450a0a;color:#fca5a5;border-color:#dc2626}
+[data-theme="dark"] .ba-orange{background:#3b1f02;color:#fcd34d;border-color:#d97706}
+[data-theme="dark"] .ba-purple{background:#2e1d5e;color:#c4b5fd;border-color:#7c3aed}
+
+.btn-del{
+  background:none;border:none;
+  color:#f87171;cursor:pointer;
+  font-size:1rem;padding:3px 6px;border-radius:6px;
+  transition:all .15s;line-height:1;
+}
+.btn-del:hover{background:#fee2e2;color:#dc2626}
+[data-theme="dark"] .btn-del:hover{background:#450a0a}
+
+/* ══════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════ */
+.chart-wrap{display:flex;flex-direction:column;align-items:center;padding-top:6px}
+canvas{max-width:210px;max-height:210px}
+.legend{margin-top:14px;width:100%}
+.li{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 0;border-bottom:1px solid var(--border);
+  font-size:.82rem;
+}
+.li:last-child{border-bottom:none}
+.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.ln{flex:1;color:var(--text2)}.lp{font-weight:700;color:var(--text)}
+
+/* ══════════════════════════════════════════
+   STATUS
+══════════════════════════════════════════ */
+.status{
+  padding:7px 13px;border-radius:9px;
+  font-size:.8rem;margin-top:10px;
+  display:none;font-weight:600;
+}
+.status.ok{background:#d1fae5;color:#065f46;display:block}
+.status.warn{background:#fee2e2;color:#991b1b;display:block}
+.status.info{background:#dbeafe;color:#1d4ed8;display:block}
+[data-theme="dark"] .status.ok{background:#022c22;color:#6ee7b7}
+[data-theme="dark"] .status.warn{background:#450a0a;color:#fca5a5}
+[data-theme="dark"] .status.info{background:#1e3a5f;color:#93c5fd}
+
+/* ══════════════════════════════════════════
+   STACKED BAR
+══════════════════════════════════════════ */
+.stack-bar{
+  height:28px;border-radius:10px;overflow:hidden;
+  display:flex;margin:14px 0 8px;background:var(--border);
+}
+.stack-seg{height:100%;transition:width .4s ease;cursor:default;position:relative}
+.stack-seg:first-child{border-radius:10px 0 0 10px}
+.stack-seg:last-child{border-radius:0 10px 10px 0}
+
+/* ══════════════════════════════════════════
+   MODE SWITCH
+══════════════════════════════════════════ */
+.mode-sw{
+  display:flex;gap:4px;align-items:center;
+  font-size:.77rem;color:var(--text3);margin-bottom:14px;
+}
+.mode-btn{
+  padding:4px 11px;border-radius:20px;
+  border:1.5px solid var(--border2);cursor:pointer;
+  background:var(--surface);font-size:.77rem;
+  color:var(--text3);transition:all .15s;font-family:inherit;
+}
+.mode-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ══════════════════════════════════════════
+   CAT HEADER
+══════════════════════════════════════════ */
+.cat-hd{
+  display:flex;align-items:center;justify-content:space-between;
+  margin:18px 0 8px;padding-bottom:7px;
+  border-bottom:2px solid var(--border);
+}
+.cat-hd-title{
+  display:flex;align-items:center;gap:8px;
+  font-weight:700;font-size:.9rem;color:var(--text);
+}
+.cat-hd-total{font-size:.88rem;font-weight:800}
+
+/* ══════════════════════════════════════════
+   COMPARE ROWS
+══════════════════════════════════════════ */
+.compare-row{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 0;border-bottom:1px solid var(--border);font-size:.87rem;
+}
+.compare-row:last-child{border-bottom:none}
+.compare-label{flex:1;color:var(--text2);font-weight:500}
+.compare-bar-wrap{
+  width:120px;height:8px;background:var(--border);
+  border-radius:4px;overflow:hidden;
+}
+.compare-bar-p1{height:100%;background:#8b5cf6;float:left;border-radius:4px;transition:width .3s}
+.compare-bar-p2{height:100%;background:#f87171;float:left;border-radius:4px;transition:width .3s}
+.compare-val{min-width:68px;text-align:right;font-weight:700;font-size:.81rem}
+
+/* ══════════════════════════════════════════
+   FOYER BANNER
+══════════════════════════════════════════ */
+.foyer-total-banner{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border-radius:var(--radius);padding:22px 28px;
+  color:#fff;text-align:center;margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.foyer-total-banner::before{
+  content:'';position:absolute;top:-30px;right:-30px;
+  width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.08);
+}
+.foyer-total-banner .big{font-size:2.2rem;font-weight:900;margin:8px 0;letter-spacing:-.02em}
+.foyer-total-banner .sub{font-size:.82rem;opacity:.75;font-weight:500}
+
+/* ══════════════════════════════════════════
+   DIVIDER
+══════════════════════════════════════════ */
+.divider{height:1px;background:var(--border);margin:16px 0}
+
+/* ══════════════════════════════════════════
+   SCROLLBAR
+══════════════════════════════════════════ */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════ -->
+<div class="app-header">
+  <div class="app-title">
+    <h1>🏠 Finances du Foyer</h1>
+    <span class="sub">Patrimoine · DCA mensuel · Budget — deux personnes, une vision commune</span>
+  </div>
+  <div class="dm-toggle" onclick="toggleDark()">
+    <div class="toggle-pill"></div>
+    <span id="dm-label">Mode nuit</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN TABS
+══════════════════════════════════════════ -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('patrimoine')">📊 Patrimoine</button>
+  <button class="tab-btn" onclick="switchTab('dca')">📈 DCA mensuel</button>
+  <button class="tab-btn" onclick="switchTab('budget')">💳 Budget mensuel</button>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1 — PATRIMOINE
+══════════════════════════════════════════ -->
+<div id="panel-patrimoine" class="panel active"><div class="wrap">
+  <div class="person-tabs">
+    <button class="p-btn p1 active" onclick="patSwitchPerson('p1')">👤 <span id="pat-p1-label">Personne 1</span></button>
+    <button class="p-btn p2" onclick="patSwitchPerson('p2')">👤 <span id="pat-p2-label">Personne 2</span></button>
+    <button class="p-btn foyer" onclick="patSwitchPerson('foyer')">🏠 Foyer</button>
+  </div>
+
+  <!-- P1 -->
+  <div id="pat-sub-p1" class="sub-panel active">
+    <div class="g3">
+      <div class="sc p1c"><div class="lbl">Total</div><div class="val" id="pat-p1-total">0 €</div></div>
+      <div class="sc green"><div class="lbl">Meilleur poste</div><div class="val" id="pat-p1-top">—</div></div>
+      <div class="sc"><div class="lbl">Postes</div><div class="val" id="pat-p1-nb">0</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <h2>📋 Patrimoine <span class="tag" id="pat-p1-h2">Personne 1</span></h2>
+        <table class="tbl"><thead><tr><th>Catégorie</th><th style="text-align:right">Montant</th><th>Part</th><th></th></tr></thead>
+        <tbody id="pat-p1-tbody"></tbody>
+        <tfoot><tr class="tfoot-row"><td>TOTAL</td><td style="text-align:right" id="pat-p1-total-td">0 €</td><td><span class="badge blue">100%</span></td><td></td></tr></tfoot></table>
+        <button class="btn-add ba-purple" onclick="patAdd('p1')">+ Ajouter un poste</button>
+      </div>
+      <div class="card"><h2>🥧 Répartition</h2><div class="chart-wrap"><canvas id="pat-p1-pie" width="210" height="210"></canvas><div class="legend" id="pat-p1-legend"></div></div></div>
+    </div>
+  </div>
+
+  <!-- P2 -->
+  <div id="pat-sub-p2" class="sub-panel">
+    <div class="g3">
+      <div class="sc p2c"><div class="lbl">Total</div><div class="val" id="pat-p2-total">0 €</div></div>
+      <div class="sc green"><div class="lbl">Meilleur poste</div><div class="val" id="pat-p2-top">—</div></div>
+      <div class="sc"><div class="lbl">Postes</div><div class="val" id="pat-p2-nb">0</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <h2>📋 Patrimoine <span class="tag" style="background:#fee2e2;color:#991b1b" id="pat-p2-h2">Personne 2</span></h2>
+        <table class="tbl"><thead><tr><th>Catégorie</th><th style="text-align:right">Montant</th><th>Part</th><th></th></tr></thead>
+        <tbody id="pat-p2-tbody"></tbody>
+        <tfoot><tr class="tfoot-row"><td>TOTAL</td><td style="text-align:right" id="pat-p2-total-td">0 €</td><td><span class="badge blue">100%</span></td><td></td></tr></tfoot></table>
+        <button class="btn-add ba-red" onclick="patAdd('p2')">+ Ajouter un poste</button>
+      </div>
+      <div class="card"><h2>🥧 Répartition</h2><div class="chart-wrap"><canvas id="pat-p2-pie" width="210" height="210"></canvas><div class="legend" id="pat-p2-legend"></div></div></div>
+    </div>
+  </div>
+
+  <!-- FOYER -->
+  <div id="pat-sub-foyer" class="sub-panel">
+    <div class="g3">
+      <div class="sc p1c"><div class="lbl" id="pat-f-l1">Personne 1</div><div class="val" id="pat-f-p1">0 €</div></div>
+      <div class="sc p2c"><div class="lbl" id="pat-f-l2">Personne 2</div><div class="val" id="pat-f-p2">0 €</div></div>
+      <div class="sc green"><div class="lbl">Total foyer</div><div class="val" id="pat-f-total">0 €</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><h2>📊 Comparaison</h2><div id="pat-compare-body"></div></div>
+      <div class="card"><h2>🥧 Patrimoine combiné</h2><div class="chart-wrap"><canvas id="pat-foyer-pie" width="210" height="210"></canvas><div class="legend" id="pat-foyer-legend"></div></div></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ══════════════════════════════════════════
+     TAB 2 — DCA
+══════════════════════════════════════════ -->
+<div id="panel-dca" class="panel"><div class="wrap">
+  <div class="person-tabs">
+    <button class="p-btn p1 active" onclick="dcaSwitchPerson('p1')">👤 <span id="dca-p1-label">Personne 1</span></button>
+    <button class="p-btn p2" onclick="dcaSwitchPerson('p2')">👤 <span id="dca-p2-label">Personne 2</span></button>
+    <button class="p-btn foyer" onclick="dcaSwitchPerson('foyer')">🏠 Foyer</button>
+  </div>
+
+  <!-- DCA P1 -->
+  <div id="dca-sub-p1" class="sub-panel active">
+    <div class="banner bg-p1">
+      <div><h3>📈 DCA — <span id="dca-p1-banner-name">Personne 1</span></h3><p>Répartissez votre investissement mensuel</p></div>
+      <div class="banner-right">
+        <div class="inp-group"><label>Revenu à investir</label><div class="row"><input class="sal-inp" id="dca-p1-income" type="text" inputmode="decimal" placeholder="1000" value="1000"><span class="sal-unit">€/mois</span></div></div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="sc p1c"><div class="lbl">Alloué</div><div class="val" id="dca-p1-alloue">0 €</div></div>
+      <div class="sc orange"><div class="lbl">Non alloué</div><div class="val" id="dca-p1-restant">0 €</div></div>
+      <div class="sc"><div class="lbl">Postes</div><div class="val" id="dca-p1-nb">0</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <h2>📋 Allocation mensuelle</h2>
+        <div class="mode-sw"><span>Saisie :</span>
+          <button class="mode-btn active" id="dca-p1-mode-pct" onclick="dcaSetMode('p1','pct')">% cible</button>
+          <button class="mode-btn" id="dca-p1-mode-amt" onclick="dcaSetMode('p1','amount')">Montant €</button>
+        </div>
+        <table class="tbl"><thead><tr><th>Poste</th><th id="dca-p1-col-head" style="text-align:right">% cible</th><th>€/mois</th><th></th></tr></thead>
+        <tbody id="dca-p1-tbody"></tbody>
+        <tfoot><tr class="tfoot-row"><td>TOTAL</td><td id="dca-p1-total-pct" style="text-align:right">—</td><td id="dca-p1-total-eur" style="color:#10b981;font-weight:800">0 €</td><td></td></tr></tfoot></table>
+        <div class="status" id="dca-p1-status"></div>
+        <button class="btn-add ba-purple" onclick="dcaAdd('p1')">+ Ajouter un poste</button>
+      </div>
+      <div class="card"><h2>🥧 Répartition DCA</h2><div class="chart-wrap"><canvas id="dca-p1-pie" width="210" height="210"></canvas><div class="legend" id="dca-p1-legend"></div></div></div>
+    </div>
+    <div class="card"><h2>📅 Projection cumulative</h2>
+      <table class="tbl"><thead><tr><th>Poste</th><th style="text-align:right">/mois</th><th style="text-align:right">3 mois</th><th style="text-align:right">6 mois</th><th style="text-align:right">12 mois</th></tr></thead>
+      <tbody id="dca-p1-proj"></tbody>
+      <tfoot><tr class="tfoot-row"><td>TOTAL</td><td id="dca-p1-pj1" style="text-align:right;color:#10b981">—</td><td id="dca-p1-pj3" style="text-align:right">—</td><td id="dca-p1-pj6" style="text-align:right">—</td><td id="dca-p1-pj12" style="text-align:right">—</td></tr></tfoot></table>
+    </div>
+  </div>
+
+  <!-- DCA P2 -->
+  <div id="dca-sub-p2" class="sub-panel">
+    <div class="banner bg-p2">
+      <div><h3>📈 DCA — <span id="dca-p2-banner-name">Personne 2</span></h3><p>Répartissez votre investissement mensuel</p></div>
+      <div class="banner-right">
+        <div class="inp-group"><label>Revenu à investir</label><div class="row"><input class="sal-inp" id="dca-p2-income" type="text" inputmode="decimal" placeholder="800" value="800"><span class="sal-unit">€/mois</span></div></div>
+      </div>
+    </div>
+    <div class="g3">
+      <div class="sc p2c"><div class="lbl">Alloué</div><div class="val" id="dca-p2-alloue">0 €</div></div>
+      <div class="sc orange"><div class="lbl">Non alloué</div><div class="val" id="dca-p2-restant">0 €</div></div>
+      <div class="sc"><div class="lbl">Postes</div><div class="val" id="dca-p2-nb">0</div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <h2>📋 Allocation mensuelle</h2>
+        <div class="mode-sw"><span>Saisie :</span>
+          <button class="mode-btn active" id="dca-p2-mode-pct" onclick="dcaSetMode('p2','pct')">% cible</button>
+          <button class="mode-btn" id="dca-p2-mode-amt" onclick="dcaSetMode('p2','amount')">Montant €</button>
+        </div>
+        <table class="tbl"><thead><tr><th>Poste</th><th id="dca-p2-col-head" style="text-align:right">% cible</th><th>€/mois</th><th></th></tr></thead>
+        <tbody id="dca-p2-tbody"></tbody>
+        <tfoot><tr class="tfoot-row"><td>TOTAL</td><td id="dca-p2-total-pct" style="text-align:right">—</td><td id="dca-p2-total-eur" style="color:#10b981;font-weight:800">0 €</td><td></td></tr></tfoot></table>
+        <div class="status" id="dca-p2-status"></div>
+        <button class="btn-add ba-red" onclick="dcaAdd('p2')">+ Ajouter un poste</button>
+      </div>
+      <div class="card"><h2>🥧 Répartition DCA</h2><div class="chart-wrap"><canvas id="dca-p2-pie" width="210" height="210"></canvas><div class="legend" id="dca-p2-legend"></div></div></div>
+    </div>
+    <div class="card"><h2>📅 Projection cumulative</h2>
+      <table class="tbl"><thead><tr><th>Poste</th><th style="text-align:right">/mois</th><th style="text-align:right">3 mois</th><th style="text-align:right">6 mois</th><th style="text-align:right">12 mois</th></tr></thead>
+      <tbody id="dca-p2-proj"></tbody>
+      <tfoot><tr class="tfoot-row"><td>TOTAL</td><td id="dca-p2-pj1" style="text-align:right;color:#10b981">—</td><td id="dca-p2-pj3" style="text-align:right">—</td><td id="dca-p2-pj6" style="text-align:right">—</td><td id="dca-p2-pj12" style="text-align:right">—</td></tr></tfoot></table>
+    </div>
+  </div>
+
+  <!-- DCA FOYER -->
+  <div id="dca-sub-foyer" class="sub-panel">
+    <div class="g4">
+      <div class="sc p1c"><div class="lbl" id="dca-f-l1">Personne 1</div><div class="val" id="dca-f-p1">0 €</div></div>
+      <div class="sc p2c"><div class="lbl" id="dca-f-l2">Personne 2</div><div class="val" id="dca-f-p2">0 €</div></div>
+      <div class="sc green"><div class="lbl">Total /mois</div><div class="val" id="dca-f-total">0 €</div></div>
+      <div class="sc teal"><div class="lbl">Total /an</div><div class="val" id="dca-f-total-year">0 €</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><h2>📊 DCA combiné</h2><div id="dca-foyer-compare"></div></div>
+      <div class="card"><h2>🥧 Investissement foyer</h2><div class="chart-wrap"><canvas id="dca-foyer-pie" width="210" height="210"></canvas><div class="legend" id="dca-foyer-legend"></div></div></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ══════════════════════════════════════════
+     TAB 3 — BUDGET
+══════════════════════════════════════════ -->
+<div id="panel-budget" class="panel"><div class="wrap">
+  <div class="person-tabs">
+    <button class="p-btn p1 active" onclick="budSwitchPerson('p1')">👤 <span id="bud-p1-label">Personne 1</span></button>
+    <button class="p-btn p2" onclick="budSwitchPerson('p2')">👤 <span id="bud-p2-label">Personne 2</span></button>
+    <button class="p-btn foyer" onclick="budSwitchPerson('foyer')">🏠 Foyer</button>
+  </div>
+
+  <!-- BUDGET P1 -->
+  <div id="bud-sub-p1" class="sub-panel active">
+    <div class="banner bg-p1">
+      <div><h3>💳 Budget — <span id="bud-p1-banner-name">Personne 1</span></h3><p>Répartissez votre salaire entre charges, loisirs et épargne</p></div>
+      <div class="banner-right">
+        <div class="inp-group"><label>Prénom</label><input class="name-inp-banner" id="name-p1" type="text" placeholder="Prénom…" value="Personne 1"></div>
+        <div class="inp-group"><label>Salaire net</label><div class="row"><input class="sal-inp" id="bud-p1-salary" type="text" inputmode="decimal" placeholder="3000" value="3000"><span class="sal-unit">€</span></div></div>
+      </div>
+    </div>
+    <div class="g4">
+      <div class="sc blue"><div class="lbl">Salaire</div><div class="val" id="bud-p1-s-salary">0 €</div></div>
+      <div class="sc red"><div class="lbl">Dépenses</div><div class="val" id="bud-p1-s-dep">0 €</div></div>
+      <div class="sc green"><div class="lbl">Épargne</div><div class="val" id="bud-p1-s-inv">0 €</div></div>
+      <div class="sc orange"><div class="lbl">Solde</div><div class="val" id="bud-p1-s-solde">0 €</div></div>
+    </div>
+    <div class="card"><h2>📊 Vue d'ensemble</h2><div class="stack-bar" id="bud-p1-stack"></div><div class="legend" id="bud-p1-stack-legend"></div><div class="status" id="bud-p1-status"></div></div>
+    <div class="g2" id="bud-p1-cats"></div>
+    <div class="card"><h2>🥧 Répartition budget</h2><div class="chart-wrap"><canvas id="bud-p1-pie" width="210" height="210"></canvas><div class="legend" id="bud-p1-legend"></div></div></div>
+  </div>
+
+  <!-- BUDGET P2 -->
+  <div id="bud-sub-p2" class="sub-panel">
+    <div class="banner bg-p2">
+      <div><h3>💳 Budget — <span id="bud-p2-banner-name">Personne 2</span></h3><p>Répartissez votre salaire entre charges, loisirs et épargne</p></div>
+      <div class="banner-right">
+        <div class="inp-group"><label>Prénom</label><input class="name-inp-banner" id="name-p2" type="text" placeholder="Prénom…" value="Personne 2"></div>
+        <div class="inp-group"><label>Salaire net</label><div class="row"><input class="sal-inp" id="bud-p2-salary" type="text" inputmode="decimal" placeholder="2500" value="2500"><span class="sal-unit">€</span></div></div>
+      </div>
+    </div>
+    <div class="g4">
+      <div class="sc blue"><div class="lbl">Salaire</div><div class="val" id="bud-p2-s-salary">0 €</div></div>
+      <div class="sc red"><div class="lbl">Dépenses</div><div class="val" id="bud-p2-s-dep">0 €</div></div>
+      <div class="sc green"><div class="lbl">Épargne</div><div class="val" id="bud-p2-s-inv">0 €</div></div>
+      <div class="sc orange"><div class="lbl">Solde</div><div class="val" id="bud-p2-s-solde">0 €</div></div>
+    </div>
+    <div class="card"><h2>📊 Vue d'ensemble</h2><div class="stack-bar" id="bud-p2-stack"></div><div class="legend" id="bud-p2-stack-legend"></div><div class="status" id="bud-p2-status"></div></div>
+    <div class="g2" id="bud-p2-cats"></div>
+    <div class="card"><h2>🥧 Répartition budget</h2><div class="chart-wrap"><canvas id="bud-p2-pie" width="210" height="210"></canvas><div class="legend" id="bud-p2-legend"></div></div></div>
+  </div>
+
+  <!-- BUDGET FOYER -->
+  <div id="bud-sub-foyer" class="sub-panel">
+    <div class="foyer-total-banner">
+      <div class="sub">Revenus combinés du foyer</div>
+      <div class="big" id="bud-f-total-income">0 €</div>
+      <div class="sub" id="bud-f-names">Personne 1 + Personne 2</div>
+    </div>
+    <div class="g5">
+      <div class="sc p1c"><div class="lbl" id="bud-f-l1">P1 salaire</div><div class="val" id="bud-f-p1-sal">0 €</div></div>
+      <div class="sc p2c"><div class="lbl" id="bud-f-l2">P2 salaire</div><div class="val" id="bud-f-p2-sal">0 €</div></div>
+      <div class="sc red"><div class="lbl">Dépenses foyer</div><div class="val" id="bud-f-dep">0 €</div></div>
+      <div class="sc green"><div class="lbl">Épargne foyer</div><div class="val" id="bud-f-inv">0 €</div></div>
+      <div class="sc orange"><div class="lbl">Solde foyer</div><div class="val" id="bud-f-solde">0 €</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><h2>📊 Comparaison par catégorie</h2><div id="bud-foyer-compare"></div></div>
+      <div class="card"><h2>🥧 Budget foyer combiné</h2><div class="chart-wrap"><canvas id="bud-foyer-pie" width="210" height="210"></canvas><div class="legend" id="bud-foyer-legend"></div></div></div>
+    </div>
+  </div>
+</div></div>
+
+<script>
+// ══════════════════════════════════════════
+//  DARK MODE
+// ══════════════════════════════════════════
+function toggleDark(){
+  const d=document.documentElement;
+  const isDark=d.dataset.theme==='dark';
+  d.dataset.theme=isDark?'light':'dark';
+  document.getElementById('dm-label').textContent=isDark?'Mode nuit':'Mode jour';
+  // Redraw all charts
+  setTimeout(()=>redrawAllCharts(),50);
+}
+function redrawAllCharts(){
+  patUpdateStats('p1');patUpdateStats('p2');patUpdateFoyer();
+  dcaUpdateStats('p1');dcaUpdateStats('p2');dcaUpdateFoyer();
+  budUpdateStats('p1');budUpdateStats('p2');budUpdateFoyer();
+}
+
+// ══════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════
+const COLORS=['#6366f1','#10b981','#f59e0b','#8b5cf6','#ef4444','#14b8a6','#f97316','#3b82f6','#ec4899','#22d3ee','#84cc16','#a855f7','#fb923c','#2dd4bf'];
+const CAT_COLORS={charges:'#ef4444',loisirs:'#f59e0b',invest:'#10b981',alim:'#3b82f6'};
+const CAT_NAMES={charges:'Charges fixes',loisirs:'Loisirs & vie courante',invest:'Investissement',alim:'Alimentation'};
+const CAT_LIST=['charges','loisirs','invest','alim'];
+const CAT_BTN={charges:'ba-red',loisirs:'ba-orange',invest:'ba-green',alim:'ba-blue'};
+const CAT_ICON={charges:'🏠',loisirs:'🎉',invest:'📈',alim:'🛒'};
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+let gid=1;
+function fmt(n){return(n||0).toLocaleString('fr-FR',{minimumFractionDigits:0,maximumFractionDigits:0})+' €'}
+function pname(p){return document.getElementById(`name-${p}`)?.value.trim()||`Personne ${p==='p1'?1:2}`}
+function parseVal(v){return parseFloat(String(v).replace(',','.'))||0}
+function getSurface(){return getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff'}
+
+// ══════════════════════════════════════════
+//  DRAW PIE (donut)
+// ══════════════════════════════════════════
+function drawPie(id,data,total,field){
+  const c=document.getElementById(id);if(!c)return;
+  const ctx=c.getContext('2d'),W=c.width,H=c.height;
+  ctx.clearRect(0,0,W,H);
+  const cx=W/2,cy=H/2,r=Math.min(W,H)/2-8;
+  const isDark=document.documentElement.dataset.theme==='dark';
+  const bgColor=isDark?'#1e2330':'#ffffff';
+  const emptyColor=isDark?'#2d3650':'#e2e8f0';
+  const textColor=isDark?'#e8eaf2':'#1a202c';
+
+  if(total<=0||data.every(d=>(d[field]||0)<=0)){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=emptyColor;ctx.fill();
+    ctx.fillStyle=isDark?'#6b7a9a':'#a0aec0';ctx.font='12px Inter,sans-serif';ctx.textAlign='center';ctx.fillText('Aucune donnée',cx,cy);return;
+  }
+  let s=-Math.PI/2;
+  data.forEach((d,i)=>{const v=d[field]||0;if(v<=0)return;
+    const sl=(v/total)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,s,s+sl);ctx.closePath();
+    ctx.fillStyle=d.color||COLORS[i%COLORS.length];ctx.fill();
+    ctx.strokeStyle=bgColor;ctx.lineWidth=2.5;ctx.stroke();s+=sl;
+  });
+  ctx.beginPath();ctx.arc(cx,cy,r*.42,0,Math.PI*2);ctx.fillStyle=bgColor;ctx.fill();
+  ctx.fillStyle=textColor;ctx.font='bold 11px Inter,sans-serif';ctx.textAlign='center';ctx.fillText(fmt(total),cx,cy+4);
+}
+function drawLegend(id,data,total,field){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=data.map((d,i)=>{const v=d[field]||0,pct=total>0?(v/total*100).toFixed(1):0;
+    return`<div class="li"><div class="ld" style="background:${d.color||COLORS[i%COLORS.length]}"></div><span class="ln">${d.name}</span><span class="lp">${pct}%</span></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  RECONCILE TABLE (no cursor jump)
+// ══════════════════════════════════════════
+function reconcile(tbodyId,rows,rowHTML,updateCells){
+  const tbody=document.getElementById(tbodyId);if(!tbody)return;
+  [...tbody.querySelectorAll('tr[data-id]')].forEach(tr=>{if(!rows.find(r=>String(r.id)===tr.dataset.id))tr.remove();});
+  rows.forEach((row,idx)=>{
+    let tr=tbody.querySelector(`tr[data-id="${row.id}"]`);
+    if(!tr){
+      tr=document.createElement('tr');tr.dataset.id=row.id;tr.innerHTML=rowHTML(row,idx);
+      const all=[...tbody.querySelectorAll('tr[data-id]')];
+      const after=all[idx];if(after)tbody.insertBefore(tr,after);else tbody.appendChild(tr);
+    } else {updateCells(tr,row,idx);}
+  });
+}
+
+// ══════════════════════════════════════════
+//  GLOBAL INPUT LISTENER
+// ══════════════════════════════════════════
+document.addEventListener('input',e=>{
+  const inp=e.target,id=inp.dataset.id?parseInt(inp.dataset.id):null,f=inp.dataset.field,p=inp.dataset.person,cat=inp.dataset.cat;
+  if(inp.id==='name-p1'){syncNames('p1');return;}
+  if(inp.id==='name-p2'){syncNames('p2');return;}
+  if(inp.id==='bud-p1-salary'){budUpdateStats('p1');budUpdateFoyer();return;}
+  if(inp.id==='bud-p2-salary'){budUpdateStats('p2');budUpdateFoyer();return;}
+  if(inp.id==='dca-p1-income'){dcaUpdateStats('p1');dcaUpdateFoyer();dcaUpdateProjection('p1');return;}
+  if(inp.id==='dca-p2-income'){dcaUpdateStats('p2');dcaUpdateFoyer();dcaUpdateProjection('p2');return;}
+  if(id===null)return;
+  if(p&&patData[p]){const r=patData[p].find(r=>r.id===id);if(r){if(f==='amount')r.amount=parseVal(inp.value);if(f==='name')r.name=inp.value;patUpdateStats(p);patUpdateFoyer();return;}}
+  if(p&&dcaData[p]){const r=dcaData[p].find(r=>r.id===id);if(r){if(f==='pct')r.pct=parseVal(inp.value);if(f==='amount')r.amount=parseVal(inp.value);if(f==='name')r.name=inp.value;dcaUpdateStats(p);dcaUpdateFoyer();dcaUpdateProjection(p);return;}}
+  if(p&&cat&&budData[p]&&budData[p][cat]){const r=budData[p][cat].find(r=>r.id===id);if(r){if(f==='amount')r.amount=parseVal(inp.value);if(f==='name')r.name=inp.value;budUpdateStats(p);budUpdateFoyer();}}
+});
+
+function syncNames(p){
+  const n=pname(p);
+  ['pat','dca','bud'].forEach(t=>{
+    const l=document.getElementById(`${t}-${p}-label`);if(l)l.textContent=n;
+    const bn=document.getElementById(`${t}-${p}-banner-name`);if(bn)bn.textContent=n;
+  });
+  const h=document.getElementById(`pat-${p}-h2`);if(h)h.textContent=n;
+  patUpdateFoyer();dcaUpdateFoyer();budUpdateFoyer();
+}
+
+// ══════════════════════════════════════════
+//  TAB 1 — PATRIMOINE
+// ══════════════════════════════════════════
+const patData={
+  p1:[{id:gid++,name:'Livret A',amount:5000},{id:gid++,name:'Assurance Vie',amount:15000},{id:gid++,name:'PEA',amount:8000},{id:gid++,name:'PER',amount:4000}],
+  p2:[{id:gid++,name:'Livret A',amount:3000},{id:gid++,name:'Assurance Vie',amount:8000},{id:gid++,name:'Compte courant',amount:2000}],
+};
+function patSwitchPerson(p){
+  ['p1','p2','foyer'].forEach(x=>{document.getElementById(`pat-sub-${x}`).classList.toggle('active',x===p);});
+  document.querySelectorAll('#panel-patrimoine .p-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`#panel-patrimoine .p-btn.${p}`).classList.add('active');
+  if(p==='foyer')patUpdateFoyer();
+}
+function patAdd(p){patData[p].push({id:gid++,name:'Nouveau',amount:0});patFullRender(p);}
+function patDelete(id,p){patData[p]=patData[p].filter(r=>r.id!==id);patFullRender(p);}
+function patRowHTML(p,r,i){
+  const c=COLORS[i%COLORS.length];
+  return`<td><span class="dot" style="background:${c}"></span><input class="inp-name" data-field="name" data-id="${r.id}" data-person="${p}" type="text" value="${r.name.replace(/"/g,'&quot;')}" placeholder="Nom…"></td>
+  <td style="text-align:right"><input class="inp-num" data-field="amount" data-id="${r.id}" data-person="${p}" type="text" inputmode="decimal" value="${r.amount}" placeholder="0"></td>
+  <td data-cell="pct"><span class="pw"><span class="pf" style="width:0%;background:${c}"></span></span><span class="badge blue">0%</span></td>
+  <td><button class="btn-del" onclick="patDelete(${r.id},'${p}')">×</button></td>`;
+}
+function patUpdateRowCells(p,tr,row,idx,total){
+  const pct=total>0?(row.amount/total*100).toFixed(1):0,c=COLORS[idx%COLORS.length];
+  const cell=tr.querySelector('[data-cell="pct"]');
+  if(cell){cell.querySelector('.pf').style.width=pct+'%';cell.querySelector('.pf').style.background=c;cell.querySelector('.badge').textContent=pct+'%';}
+  const dot=tr.querySelector('.dot');if(dot)dot.style.background=c;
+  const ai=tr.querySelector('[data-field="amount"]');if(ai&&document.activeElement!==ai)ai.value=row.amount;
+  const ni=tr.querySelector('[data-field="name"]');if(ni&&document.activeElement!==ni)ni.value=row.name;
+}
+function patFullRender(p){
+  reconcile(`pat-${p}-tbody`,patData[p],(r,i)=>patRowHTML(p,r,i),(tr,row,idx)=>{const t=patData[p].reduce((s,r)=>s+r.amount,0);patUpdateRowCells(p,tr,row,idx,t);});
+  patUpdateStats(p);
+}
+function patUpdateStats(p){
+  const rows=patData[p],total=rows.reduce((s,r)=>s+r.amount,0);
+  document.getElementById(`pat-${p}-total`).textContent=fmt(total);
+  document.getElementById(`pat-${p}-total-td`).textContent=fmt(total);
+  document.getElementById(`pat-${p}-nb`).textContent=rows.length;
+  const top=rows.length>0?rows.reduce((a,b)=>a.amount>b.amount?a:b):null;
+  document.getElementById(`pat-${p}-top`).textContent=top&&total>0?top.name:'—';
+  const cd=rows.map((r,i)=>({...r,color:COLORS[i%COLORS.length]}));
+  drawPie(`pat-${p}-pie`,cd,total,'amount');drawLegend(`pat-${p}-legend`,cd,total,'amount');
+  rows.forEach((r,i)=>{const tr=document.querySelector(`#pat-${p}-tbody tr[data-id="${r.id}"]`);if(tr)patUpdateRowCells(p,tr,r,i,total);});
+  patUpdateFoyer();
+}
+function patUpdateFoyer(){
+  const t1=patData.p1.reduce((s,r)=>s+r.amount,0),t2=patData.p2.reduce((s,r)=>s+r.amount,0),tf=t1+t2;
+  const n1=pname('p1'),n2=pname('p2');
+  document.getElementById('pat-f-l1').textContent=n1;document.getElementById('pat-f-l2').textContent=n2;
+  document.getElementById('pat-f-p1').textContent=fmt(t1);document.getElementById('pat-f-p2').textContent=fmt(t2);document.getElementById('pat-f-total').textContent=fmt(tf);
+  const allNames=[...new Set([...patData.p1.map(r=>r.name),...patData.p2.map(r=>r.name)])];
+  document.getElementById('pat-compare-body').innerHTML=allNames.map(name=>{
+    const v1=patData.p1.find(r=>r.name===name)?.amount||0,v2=patData.p2.find(r=>r.name===name)?.amount||0,max=Math.max(v1,v2,1);
+    return`<div class="compare-row"><span class="compare-label">${name}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p1" style="width:${v1/max*100}%"></div></div><span class="compare-val" style="color:#8b5cf6">${fmt(v1)}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p2" style="width:${v2/max*100}%"></div></div><span class="compare-val" style="color:#ef4444">${fmt(v2)}</span></div>`;
+  }).join('');
+  const combined=[{name:n1,value:t1,color:'#8b5cf6'},{name:n2,value:t2,color:'#f87171'}];
+  drawPie('pat-foyer-pie',combined,tf,'value');drawLegend('pat-foyer-legend',combined,tf,'value');
+}
+
+// ══════════════════════════════════════════
+//  TAB 2 — DCA
+// ══════════════════════════════════════════
+const dcaData={
+  p1:[{id:gid++,name:'ETF World (CW8)',pct:50,amount:500},{id:gid++,name:'ETF Nasdaq',pct:20,amount:200},{id:gid++,name:'Or',pct:15,amount:150},{id:gid++,name:'Crypto (BTC)',pct:15,amount:150}],
+  p2:[{id:gid++,name:'ETF World (CW8)',pct:60,amount:480},{id:gid++,name:'Assurance Vie',pct:25,amount:200},{id:gid++,name:'Livret A',pct:15,amount:120}],
+};
+const dcaMode={p1:'pct',p2:'pct'};
+function dcaSwitchPerson(p){
+  ['p1','p2','foyer'].forEach(x=>{document.getElementById(`dca-sub-${x}`).classList.toggle('active',x===p);});
+  document.querySelectorAll('#panel-dca .p-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`#panel-dca .p-btn.${p}`).classList.add('active');
+  if(p==='foyer')dcaUpdateFoyer();
+}
+function dcaSetMode(p,m){
+  dcaMode[p]=m;
+  document.getElementById(`dca-${p}-mode-pct`).classList.toggle('active',m==='pct');
+  document.getElementById(`dca-${p}-mode-amt`).classList.toggle('active',m==='amount');
+  document.getElementById(`dca-${p}-col-head`).textContent=m==='pct'?'% cible':'Montant (€)';
+  dcaFullRender(p);
+}
+function dcaAdd(p){dcaData[p].push({id:gid++,name:'Nouveau',pct:0,amount:0});dcaFullRender(p);}
+function dcaDelete(id,p){dcaData[p]=dcaData[p].filter(r=>r.id!==id);dcaFullRender(p);}
+function dcaMonthly(p,r){const inc=parseVal(document.getElementById(`dca-${p}-income`).value);return dcaMode[p]==='pct'?inc*r.pct/100:r.amount;}
+function dcaRowHTML(p,r,i){
+  const c=COLORS[i%COLORS.length];
+  const ic=dcaMode[p]==='pct'
+    ?`<input class="inp-num" data-field="pct" data-id="${r.id}" data-person="${p}" type="text" inputmode="decimal" value="${r.pct}" placeholder="0"> %`
+    :`<input class="inp-num" data-field="amount" data-id="${r.id}" data-person="${p}" type="text" inputmode="decimal" value="${r.amount}" placeholder="0"> €`;
+  return`<td><span class="dot" style="background:${c}"></span><input class="inp-name" data-field="name" data-id="${r.id}" data-person="${p}" type="text" value="${r.name.replace(/"/g,'&quot;')}" placeholder="Nom…"></td>
+  <td style="text-align:right" data-cell="ic">${ic}</td>
+  <td data-cell="monthly"><span class="pw"><span class="pf" style="width:0%;background:${c}"></span></span><span class="badge green">0 €</span></td>
+  <td><button class="btn-del" onclick="dcaDelete(${r.id},'${p}')">×</button></td>`;
+}
+function dcaUpdateRowCells(p,tr,row,idx,total){
+  const m=dcaMonthly(p,row),pct=total>0?(m/total*100):0,c=COLORS[idx%COLORS.length];
+  const mc=tr.querySelector('[data-cell="monthly"]');
+  if(mc){mc.querySelector('.pf').style.width=pct+'%';mc.querySelector('.pf').style.background=c;mc.querySelector('.badge').textContent=fmt(m);}
+  const dot=tr.querySelector('.dot');if(dot)dot.style.background=c;
+  const ni=tr.querySelector('[data-field="name"]');if(ni&&document.activeElement!==ni)ni.value=row.name;
+  const fi=dcaMode[p]==='pct'?'pct':'amount';
+  const vi=tr.querySelector(`[data-field="${fi}"]`);if(vi&&document.activeElement!==vi)vi.value=dcaMode[p]==='pct'?row.pct:row.amount;
+}
+function dcaFullRender(p){
+  reconcile(`dca-${p}-tbody`,dcaData[p],(r,i)=>dcaRowHTML(p,r,i),(tr,row,idx)=>{const t=dcaData[p].reduce((s,r)=>s+dcaMonthly(p,r),0);dcaUpdateRowCells(p,tr,row,idx,t);});
+  dcaUpdateStats(p);dcaUpdateProjection(p);
+}
+function dcaUpdateStats(p){
+  const inc=parseVal(document.getElementById(`dca-${p}-income`).value);
+  const computed=dcaData[p].map((r,i)=>({...r,monthly:dcaMonthly(p,r),color:COLORS[i%COLORS.length]}));
+  const ta=computed.reduce((s,r)=>s+r.monthly,0);
+  const tp=dcaMode[p]==='pct'?dcaData[p].reduce((s,r)=>s+r.pct,0):(inc>0?ta/inc*100:0);
+  const rest=inc-ta;
+  document.getElementById(`dca-${p}-alloue`).textContent=fmt(ta);
+  document.getElementById(`dca-${p}-restant`).textContent=fmt(Math.max(0,rest));
+  document.getElementById(`dca-${p}-restant`).style.color=rest<-0.01?'#ef4444':rest<0.01?'#10b981':'#f59e0b';
+  document.getElementById(`dca-${p}-nb`).textContent=dcaData[p].length;
+  document.getElementById(`dca-${p}-total-pct`).textContent=tp.toFixed(1)+'%';
+  document.getElementById(`dca-${p}-total-eur`).textContent=fmt(ta);
+  const st=document.getElementById(`dca-${p}-status`);st.className='status';
+  if(inc>0&&ta>inc+0.01){st.className='status warn';st.textContent='⚠️ L\'allocation dépasse votre revenu !';}
+  else if(ta>0&&Math.abs(rest)<0.01){st.className='status ok';st.textContent='✅ Allocation équilibrée à 100%';}
+  else if(rest>0.01&&ta>0){st.className='status info';st.textContent=`ℹ️ ${fmt(rest)} non alloués`;}
+  drawPie(`dca-${p}-pie`,computed,ta,'monthly');drawLegend(`dca-${p}-legend`,computed,ta,'monthly');
+  dcaData[p].forEach((r,i)=>{const tr=document.querySelector(`#dca-${p}-tbody tr[data-id="${r.id}"]`);if(tr)dcaUpdateRowCells(p,tr,r,i,ta);});
+  dcaUpdateFoyer();
+}
+function dcaUpdateProjection(p){
+  const ta=dcaData[p].reduce((s,r)=>s+dcaMonthly(p,r),0);
+  document.getElementById(`dca-${p}-proj`).innerHTML=dcaData[p].map((r,i)=>{const m=dcaMonthly(p,r);
+    return`<tr><td><span class="dot" style="background:${COLORS[i%COLORS.length]}"></span>${r.name}</td>
+    <td style="text-align:right;color:#10b981;font-weight:700">${fmt(m)}</td><td style="text-align:right">${fmt(m*3)}</td><td style="text-align:right">${fmt(m*6)}</td><td style="text-align:right">${fmt(m*12)}</td></tr>`;
+  }).join('');
+  document.getElementById(`dca-${p}-pj1`).textContent=fmt(ta);document.getElementById(`dca-${p}-pj3`).textContent=fmt(ta*3);
+  document.getElementById(`dca-${p}-pj6`).textContent=fmt(ta*6);document.getElementById(`dca-${p}-pj12`).textContent=fmt(ta*12);
+}
+function dcaUpdateFoyer(){
+  const n1=pname('p1'),n2=pname('p2');
+  const t1=dcaData.p1.reduce((s,r)=>s+dcaMonthly('p1',r),0),t2=dcaData.p2.reduce((s,r)=>s+dcaMonthly('p2',r),0),tf=t1+t2;
+  document.getElementById('dca-f-l1').textContent=n1;document.getElementById('dca-f-l2').textContent=n2;
+  document.getElementById('dca-f-p1').textContent=fmt(t1);document.getElementById('dca-f-p2').textContent=fmt(t2);
+  document.getElementById('dca-f-total').textContent=fmt(tf);document.getElementById('dca-f-total-year').textContent=fmt(tf*12);
+  const allNames=[...new Set([...dcaData.p1.map(r=>r.name),...dcaData.p2.map(r=>r.name)])];
+  document.getElementById('dca-foyer-compare').innerHTML=allNames.map(name=>{
+    const v1=dcaData.p1.reduce((s,r)=>r.name===name?s+dcaMonthly('p1',r):s,0),v2=dcaData.p2.reduce((s,r)=>r.name===name?s+dcaMonthly('p2',r):s,0),max=Math.max(v1,v2,1);
+    return`<div class="compare-row"><span class="compare-label">${name}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p1" style="width:${v1/max*100}%"></div></div><span class="compare-val" style="color:#8b5cf6">${fmt(v1)}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p2" style="width:${v2/max*100}%"></div></div><span class="compare-val" style="color:#ef4444">${fmt(v2)}</span></div>`;
+  }).join('');
+  const combined=[{name:n1,value:t1,color:'#8b5cf6'},{name:n2,value:t2,color:'#f87171'}];
+  drawPie('dca-foyer-pie',combined,tf,'value');drawLegend('dca-foyer-legend',combined,tf,'value');
+}
+
+// ══════════════════════════════════════════
+//  TAB 3 — BUDGET
+// ══════════════════════════════════════════
+let budNextId=500;
+const budData={
+  p1:{
+    charges:[{id:budNextId++,name:'Loyer / crédit',amount:900},{id:budNextId++,name:'Énergie',amount:80},{id:budNextId++,name:'Internet & tél.',amount:50},{id:budNextId++,name:'Assurances',amount:70},{id:budNextId++,name:'Transport',amount:120}],
+    loisirs:[{id:budNextId++,name:'Sorties',amount:150},{id:budNextId++,name:'Abonnements',amount:40},{id:budNextId++,name:'Sport',amount:60}],
+    invest:[{id:budNextId++,name:'PEA / ETF',amount:200},{id:budNextId++,name:'Livret A',amount:100}],
+    alim:[{id:budNextId++,name:'Courses',amount:250},{id:budNextId++,name:'Restaurants',amount:80}],
+  },
+  p2:{
+    charges:[{id:budNextId++,name:'Loyer / crédit',amount:700},{id:budNextId++,name:'Énergie',amount:60},{id:budNextId++,name:'Internet & tél.',amount:45},{id:budNextId++,name:'Assurances',amount:55}],
+    loisirs:[{id:budNextId++,name:'Sorties',amount:120},{id:budNextId++,name:'Abonnements',amount:30},{id:budNextId++,name:'Habillement',amount:80}],
+    invest:[{id:budNextId++,name:'Assurance Vie',amount:150},{id:budNextId++,name:'Livret A',amount:80}],
+    alim:[{id:budNextId++,name:'Courses',amount:200},{id:budNextId++,name:'Restaurants',amount:60}],
+  },
+};
+function budSwitchPerson(p){
+  ['p1','p2','foyer'].forEach(x=>{document.getElementById(`bud-sub-${x}`).classList.toggle('active',x===p);});
+  document.querySelectorAll('#panel-budget .p-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`#panel-budget .p-btn.${p}`).classList.add('active');
+  if(p==='foyer')budUpdateFoyer();else{budRenderCats(p);budUpdateStats(p);}
+}
+function budAdd(p,cat){budData[p][cat].push({id:budNextId++,name:'Nouveau',amount:0});budRenderCats(p);budUpdateStats(p);}
+function budDelete(id,p,cat){budData[p][cat]=budData[p][cat].filter(r=>r.id!==id);budRenderCats(p);budUpdateStats(p);}
+function budRenderCats(p){
+  const salary=parseVal(document.getElementById(`bud-${p}-salary`).value);
+  const container=document.getElementById(`bud-${p}-cats`);
+  CAT_LIST.forEach(cat=>{
+    let card=container.querySelector(`[data-cat-card="${cat}"]`);
+    if(!card){
+      card=document.createElement('div');card.className='card';card.dataset.catCard=cat;
+      card.innerHTML=`<div class="cat-hd"><div class="cat-hd-title"><span style="background:${CAT_COLORS[cat]};width:12px;height:12px;border-radius:3px;display:inline-block"></span>${CAT_ICON[cat]} ${CAT_NAMES[cat]}</div><div class="cat-hd-total" id="bud-${p}-${cat}-total" style="color:${CAT_COLORS[cat]}">0 €</div></div>
+      <table class="tbl"><thead><tr><th>Poste</th><th style="text-align:right">Montant</th><th>% salaire</th><th></th></tr></thead><tbody id="bud-${p}-${cat}-tbody"></tbody></table>
+      <button class="btn-add ${CAT_BTN[cat]}" onclick="budAdd('${p}','${cat}')">+ Ajouter</button>`;
+      container.appendChild(card);
+    }
+    reconcile(`bud-${p}-${cat}-tbody`,budData[p][cat],(r,i)=>budRowHTML(p,cat,r,i,salary),(tr,row)=>budUpdateRowCells(p,cat,tr,row,salary));
+    document.getElementById(`bud-${p}-${cat}-total`).textContent=fmt(budData[p][cat].reduce((s,r)=>s+r.amount,0));
+  });
+}
+function budRowHTML(p,cat,r,i,salary){
+  const pct=salary>0?(r.amount/salary*100).toFixed(1):0;
+  return`<td><input class="inp-name" data-field="name" data-id="${r.id}" data-person="${p}" data-cat="${cat}" type="text" value="${r.name.replace(/"/g,'&quot;')}" placeholder="Nom…"></td>
+  <td style="text-align:right"><input class="inp-num" data-field="amount" data-id="${r.id}" data-person="${p}" data-cat="${cat}" type="text" inputmode="decimal" value="${r.amount}" placeholder="0"></td>
+  <td data-cell="pct"><span class="pw"><span class="pf" style="width:${Math.min(pct,100)}%;background:${CAT_COLORS[cat]}"></span></span><span class="badge gray">${pct}%</span></td>
+  <td><button class="btn-del" onclick="budDelete(${r.id},'${p}','${cat}')">×</button></td>`;
+}
+function budUpdateRowCells(p,cat,tr,row,salary){
+  const pct=salary>0?(row.amount/salary*100).toFixed(1):0;
+  const cell=tr.querySelector('[data-cell="pct"]');
+  if(cell){cell.querySelector('.pf').style.width=Math.min(pct,100)+'%';cell.querySelector('.badge').textContent=pct+'%';}
+  const ai=tr.querySelector('[data-field="amount"]');if(ai&&document.activeElement!==ai)ai.value=row.amount;
+  const ni=tr.querySelector('[data-field="name"]');if(ni&&document.activeElement!==ni)ni.value=row.name;
+}
+function budUpdateStats(p){
+  const salary=parseVal(document.getElementById(`bud-${p}-salary`).value);
+  const ct={};CAT_LIST.forEach(cat=>{ct[cat]=budData[p][cat].reduce((s,r)=>s+r.amount,0);});
+  const totalDep=ct.charges+ct.loisirs+ct.alim,totalInv=ct.invest,totalOut=totalDep+totalInv,solde=salary-totalOut;
+  document.getElementById(`bud-${p}-s-salary`).textContent=fmt(salary);
+  document.getElementById(`bud-${p}-s-dep`).textContent=fmt(totalDep);
+  document.getElementById(`bud-${p}-s-inv`).textContent=fmt(totalInv);
+  document.getElementById(`bud-${p}-s-solde`).textContent=fmt(Math.abs(solde));
+  document.getElementById(`bud-${p}-s-solde`).style.color=solde<-0.01?'#ef4444':solde<0.01?'#10b981':'#f59e0b';
+  const sd=[
+    {name:CAT_NAMES.charges,value:ct.charges,color:CAT_COLORS.charges},
+    {name:CAT_NAMES.loisirs,value:ct.loisirs,color:CAT_COLORS.loisirs},
+    {name:CAT_NAMES.invest,value:ct.invest,color:CAT_COLORS.invest},
+    {name:CAT_NAMES.alim,value:ct.alim,color:CAT_COLORS.alim},
+  ];
+  if(solde>0)sd.push({name:'Non alloué',value:solde,color:'var(--border)'});
+  const base=salary>0?salary:sd.reduce((s,d)=>s+d.value,0)||1;
+  document.getElementById(`bud-${p}-stack`).innerHTML=sd.map(d=>`<div class="stack-seg" title="${d.name}: ${fmt(d.value)}" style="width:${Math.max(0,d.value/base*100).toFixed(1)}%;background:${d.color}"></div>`).join('');
+  document.getElementById(`bud-${p}-stack-legend`).innerHTML=sd.map(d=>{const pct=base>0?(d.value/base*100).toFixed(1):0;return`<div class="li"><div class="ld" style="background:${d.color}"></div><span class="ln">${d.name}</span><span class="lp">${pct}% · ${fmt(d.value)}</span></div>`;}).join('');
+  const st=document.getElementById(`bud-${p}-status`);st.className='status';
+  if(salary>0&&totalOut>salary+0.01){st.className='status warn';st.textContent='⚠️ Les dépenses dépassent le salaire !';}
+  else if(salary>0&&Math.abs(solde)<0.01){st.className='status ok';st.textContent='✅ Budget parfaitement équilibré !';}
+  else if(salary>0&&solde>0.01){st.className='status info';st.textContent=`ℹ️ ${fmt(solde)} non alloués`;}
+  drawPie(`bud-${p}-pie`,sd.filter(d=>d.name!=='Non alloué'&&d.value>0),totalOut,'value');
+  drawLegend(`bud-${p}-legend`,sd.filter(d=>d.name!=='Non alloué'&&d.value>0),totalOut,'value');
+  const sal=salary;
+  CAT_LIST.forEach(cat=>{
+    const totEl=document.getElementById(`bud-${p}-${cat}-total`);if(totEl)totEl.textContent=fmt(ct[cat]);
+    budData[p][cat].forEach(r=>{const tr=document.querySelector(`#bud-${p}-${cat}-tbody tr[data-id="${r.id}"]`);if(tr)budUpdateRowCells(p,cat,tr,r,sal);});
+  });
+  budUpdateFoyer();
+}
+function budUpdateFoyer(){
+  const n1=pname('p1'),n2=pname('p2');
+  const s1=parseVal(document.getElementById('bud-p1-salary').value),s2=parseVal(document.getElementById('bud-p2-salary').value),sf=s1+s2;
+  document.getElementById('bud-f-total-income').textContent=fmt(sf);
+  document.getElementById('bud-f-names').textContent=`${n1} + ${n2}`;
+  document.getElementById('bud-f-l1').textContent=n1+' salaire';document.getElementById('bud-f-l2').textContent=n2+' salaire';
+  document.getElementById('bud-f-p1-sal').textContent=fmt(s1);document.getElementById('bud-f-p2-sal').textContent=fmt(s2);
+  const ct1={},ct2={};CAT_LIST.forEach(cat=>{ct1[cat]=budData.p1[cat].reduce((s,r)=>s+r.amount,0);ct2[cat]=budData.p2[cat].reduce((s,r)=>s+r.amount,0);});
+  const totalDep=CAT_LIST.filter(c=>c!=='invest').reduce((s,c)=>s+ct1[c]+ct2[c],0),totalInv=ct1.invest+ct2.invest,totalOut=totalDep+totalInv,solde=sf-totalOut;
+  document.getElementById('bud-f-dep').textContent=fmt(totalDep);document.getElementById('bud-f-inv').textContent=fmt(totalInv);
+  document.getElementById('bud-f-solde').textContent=fmt(Math.abs(solde));
+  document.getElementById('bud-f-solde').style.color=solde<-0.01?'#ef4444':solde<0.01?'#10b981':'#f59e0b';
+  document.getElementById('bud-foyer-compare').innerHTML=CAT_LIST.map(cat=>{
+    const v1=ct1[cat],v2=ct2[cat],max=Math.max(v1,v2,1);
+    return`<div class="compare-row"><span class="compare-label">${CAT_ICON[cat]} ${CAT_NAMES[cat]}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p1" style="width:${v1/max*100}%"></div></div><span class="compare-val" style="color:#8b5cf6">${fmt(v1)}</span>
+      <div class="compare-bar-wrap"><div class="compare-bar-p2" style="width:${v2/max*100}%"></div></div><span class="compare-val" style="color:#ef4444">${fmt(v2)}</span></div>`;
+  }).join('');
+  const sd=[{name:CAT_NAMES.charges,value:ct1.charges+ct2.charges,color:CAT_COLORS.charges},{name:CAT_NAMES.loisirs,value:ct1.loisirs+ct2.loisirs,color:CAT_COLORS.loisirs},{name:CAT_NAMES.invest,value:ct1.invest+ct2.invest,color:CAT_COLORS.invest},{name:CAT_NAMES.alim,value:ct1.alim+ct2.alim,color:CAT_COLORS.alim}].filter(d=>d.value>0);
+  drawPie('bud-foyer-pie',sd,totalOut,'value');drawLegend('bud-foyer-legend',sd,totalOut,'value');
+}
+
+// ══════════════════════════════════════════
+//  MAIN TAB SWITCH
+// ══════════════════════════════════════════
+function switchTab(tab){
+  const tabs=['patrimoine','dca','budget'];
+  document.querySelectorAll('.tabs .tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
+  tabs.forEach(t=>document.getElementById('panel-'+t).classList.toggle('active',t===tab));
+  setTimeout(()=>{
+    if(tab==='patrimoine'){patUpdateStats('p1');patUpdateStats('p2');patUpdateFoyer();}
+    if(tab==='dca'){dcaUpdateStats('p1');dcaUpdateStats('p2');dcaUpdateFoyer();dcaUpdateProjection('p1');dcaUpdateProjection('p2');}
+    if(tab==='budget'){budRenderCats('p1');budRenderCats('p2');budUpdateStats('p1');budUpdateStats('p2');budUpdateFoyer();}
+  },30);
+}
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+patFullRender('p1');patFullRender('p2');patUpdateFoyer();
+dcaFullRender('p1');dcaFullRender('p2');dcaUpdateFoyer();
+budRenderCats('p1');budRenderCats('p2');budUpdateStats('p1');budUpdateStats('p2');budUpdateFoyer();
+</script>
+</body>
+</html>
